@@ -66,7 +66,7 @@ function App() {
   return (
     <>
       <NavBar />
-      <div className="container mb-4" style={{marginTop:'100px'}}>
+      <div className="container mb-4" style={{ marginTop: '100px' }}>
         <Formik
           enableReinitialize
           initialValues={{
@@ -84,50 +84,79 @@ function App() {
         >
           {(formik) => (
             <Form className='table table-fluid'>
-              <div className="form-group">
-                <label className="form-label fw-bold">Name:</label>
-                <Field type="text" name="name" className="form-control" />
-                <ErrorMessage name="name" component="div" className="text-danger" />
+              <div className="row">
+                <div className="col-md-6">
+                  <div className="form-group">
+                    <label className="form-label fw-bold">Name:</label>
+                    <Field type="text" name="name" className="form-control" />
+                    <ErrorMessage name="name" component="div" className="text-danger" />
+                  </div>
+                </div>
+                <div className="col-md-6">
+                  <div className="form-group">
+                    <label className="form-label fw-bold">Date of Birth:</label>
+                    <Field type="date" name="dob" className="form-control" />
+                    <ErrorMessage name="dob" component="div" className="text-danger" />
+                  </div>
+                </div>
               </div>
-              <div className="form-group">
-                <label className="form-label fw-bold">Date of Birth:</label>
-                <Field type="date" name="dob" className="form-control" />
-                <ErrorMessage name="dob" component="div" className="text-danger" />
+
+              <div className="row">
+                <div className="col-md-6">
+                  <div className="form-group">
+                    <label className="form-label fw-bold">Contact:</label>
+                    <Field type="text" name="contact" className="form-control" />
+                    <ErrorMessage name="contact" component="div" className="text-danger" />
+                  </div>
+                </div>
+                <div className="col-md-6">
+                  <div className="form-group">
+                    <label className="form-label fw-bold">Email:</label>
+                    <Field type="email" name="email" className="form-control" />
+                    <ErrorMessage name="email" component="div" className="text-danger" />
+                  </div>
+                </div>
               </div>
-              <div className="form-group">
-                <label className="form-label fw-bold">Contact:</label>
-                <Field type="text" name="contact" className="form-control" />
-                <ErrorMessage name="contact" component="div" className="text-danger" />
+
+              <div className="row">
+                <div className="col-md-6">
+                  <div className="form-group">
+                    <label className="form-label fw-bold">Address:</label>
+                    <Field type="text" name="address" className="form-control" />
+                    <ErrorMessage name="address" component="div" className="text-danger" />
+                  </div>
+                </div>
+                <div className="col-md-6">
+                  <div className="form-group">
+                    <label className="form-label fw-bold">Department:</label>
+                    <Field type="text" name="department" className="form-control" />
+                    <ErrorMessage name="department" component="div" className="text-danger" />
+                  </div>
+                </div>
               </div>
-              <div className="form-group">
-                <label className="form-label fw-bold">Email:</label>
-                <Field type="email" name="email" className="form-control" />
-                <ErrorMessage name="email" component="div" className="text-danger" />
+
+              <div className="row">
+                <div className="col-md-6">
+                  <div className="form-group">
+                    <label className="form-label fw-bold">Designation:</label>
+                    <Field type="text" name="designation" className="form-control" />
+                    <ErrorMessage name="designation" component="div" className="text-danger" />
+                  </div>
+                </div>
+                <div className="col-md-6">
+                  <div className="form-group">
+                    <label className="form-label fw-bold">Salary:</label>
+                    <Field type="number" name="salary" className="form-control" />
+                    <ErrorMessage name="salary" component="div" className="text-danger" />
+                  </div>
+                </div>
               </div>
-              <div className="form-group">
-                <label className="form-label fw-bold">Address:</label>
-                <Field type="text" name="address" className="form-control" />
-                <ErrorMessage name="address" component="div" className="text-danger" />
-              </div>
-              <div className="form-group">
-                <label className="form-label fw-bold">Department:</label>
-                <Field type="text" name="department" className="form-control" />
-                <ErrorMessage name="department" component="div" className="text-danger" />
-              </div>
-              <div className="form-group">
-                <label className="form-label fw-bold">Designation:</label>
-                <Field type="text" name="designation" className="form-control" />
-                <ErrorMessage name="designation" component="div" className="text-danger" />
-              </div>
-              <div className="form-group">
-                <label className="form-label fw-bold">Salary:</label>
-                <Field type="number" name="salary" className="form-control" />
-                <ErrorMessage name="salary" component="div" className="text-danger" />
-              </div>
+
               <button type="submit" className="btn btn-primary mt-3">
                 {updateIndex !== null ? 'Update' : 'Submit'}
               </button>
             </Form>
+
           )}
         </Formik>
         <div className="form-group w-25 mb-3 ">
@@ -139,7 +168,7 @@ function App() {
             className="form-control"
           />
         </div>
-        <table className="table table-striped">
+        <table className="table table-striped table-bordered table-hover table-responsive">
           <thead>
             <tr>
               <th>Name</th>
@@ -166,22 +195,23 @@ function App() {
                 <td>{employee.salary}</td>
                 <td>
                   <button
-                    className="btn btn-danger me-2"
+                    className="btn btn-danger btn-sm me-2"
                     onClick={() => handleDelete(index)}
                   >
-                    Delete
+                    <i className="bi bi-trash"></i> Delete
                   </button>
                   <button
-                    className="btn btn-primary"
+                    className="btn btn-primary btn-sm"
                     onClick={() => handleUpdate(index)}
                   >
-                    Update
+                    <i className="bi bi-pencil"></i> Update
                   </button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
+
       </div>
     </>
   );
