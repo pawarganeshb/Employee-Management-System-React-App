@@ -197,6 +197,7 @@ function App() {
         <table className="table table-striped table-bordered table-hover table-responsive">
           <thead>
             <tr>
+              <th>ID</th>
               <th>Name</th>
               <th>Date of Birth</th>
               <th>Contact</th>
@@ -209,7 +210,8 @@ function App() {
           </thead>
           <tbody>
             {filteredEmployees.map((employee, index) => (
-              <tr key={index}>
+              <tr key={employee.id}>
+                <td>{employee.id}</td>
                 <td>{employee.name}</td>
                 <td>{employee.dob}</td>
                 <td>{employee.contact}</td>
