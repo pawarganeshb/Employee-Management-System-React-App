@@ -1,7 +1,7 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import axios from 'axios';
 import NavBar from './component/NavBar';
 
 const validationSchema = Yup.object({
@@ -26,7 +26,6 @@ const validationSchema = Yup.object({
     .email('Email must be a valid email format'),
   address: Yup.string().required('Address is required'),
   department: Yup.string().required('Department is required'),
-  designation: Yup.string().required('Designation is required'),
   salary: Yup.number()
     .required('Salary is required')
     .positive('Salary must be a positive number'),
@@ -36,23 +35,57 @@ function App() {
   const [employees, setEmployees] = useState([]);
   const [search, setSearch] = useState('');
   const [updateIndex, setUpdateIndex] = useState(null);
+  const API_URL = "http://localhost:8080/api/employees"; // Ensure correct backend URL
 
-  const handleSubmit = (values, { resetForm }) => {
-    if (updateIndex !== null) {
-      setEmployees(
-        employees.map((employee, i) =>
-          i === updateIndex ? { ...employee, ...values } : employee
-        )
-      );
-      setUpdateIndex(null);
-    } else {
-      setEmployees([...employees, values]);
+  // Fetch employees when the component mounts
+  useEffect(() => {
+    fetchEmployees();
+  }, []);
+
+  const fetchEmployees = async () => {
+    try {
+      const response = await axios.get(API_URL);
+      setEmployees(response.data);
+    } catch (error) {
+      console.error("Error fetching employees:", error);
     }
-    resetForm();
   };
 
-  const handleDelete = (index) => {
-    setEmployees(employees.filter((employee, i) => i !== index));
+  const handleSubmit = async (values, { resetForm }) => {
+    if (updateIndex !== null) {
+      // Handle Update
+      try {
+        const updatedEmployee = { ...employees[updateIndex], ...values };
+        await axios.put(`${API_URL}/${employees[updateIndex].id}`, updatedEmployee);
+        setEmployees(
+          employees.map((employee, i) =>
+            i === updateIndex ? updatedEmployee : employee
+          )
+        );
+        setUpdateIndex(null);  // Reset the index after updating
+        resetForm();
+      } catch (error) {
+        console.error("Error updating employee:", error);
+      }
+    } else {
+      // Handle Add
+      try {
+        const response = await axios.post(API_URL, values);
+        setEmployees([...employees, response.data]);
+        resetForm();
+      } catch (error) {
+        console.error("Error adding employee:", error);
+      }
+    }
+  };
+
+  const handleDelete = async (index) => {
+    try {
+      await axios.delete(`${API_URL}/${employees[index].id}`);
+      setEmployees(employees.filter((employee, i) => i !== index));
+    } catch (error) {
+      console.error("Error deleting employee:", error);
+    }
   };
 
   const handleUpdate = (index) => {
@@ -76,7 +109,6 @@ function App() {
             email: updateIndex !== null ? employees[updateIndex].email : '',
             address: updateIndex !== null ? employees[updateIndex].address : '',
             department: updateIndex !== null ? employees[updateIndex].department : '',
-            designation: updateIndex !== null ? employees[updateIndex].designation : '',
             salary: updateIndex !== null ? employees[updateIndex].salary : '',
           }}
           validationSchema={validationSchema}
@@ -138,13 +170,6 @@ function App() {
               <div className="row">
                 <div className="col-md-6">
                   <div className="form-group">
-                    <label className="form-label fw-bold">Designation:</label>
-                    <Field type="text" name="designation" className="form-control" />
-                    <ErrorMessage name="designation" component="div" className="text-danger" />
-                  </div>
-                </div>
-                <div className="col-md-6">
-                  <div className="form-group">
                     <label className="form-label fw-bold">Salary:</label>
                     <Field type="number" name="salary" className="form-control" />
                     <ErrorMessage name="salary" component="div" className="text-danger" />
@@ -156,11 +181,11 @@ function App() {
                 {updateIndex !== null ? 'Update' : 'Submit'}
               </button>
             </Form>
-
           )}
         </Formik>
-        <div className="form-group w-25 mb-3 ">
-          <label className='form-label mt-2 fw-bold'>Search:</label>
+
+        <div className="form-group w-25 mb-3">
+          <label className="form-label mt-2 fw-bold">Search:</label>
           <input
             type="text"
             value={search}
@@ -168,6 +193,7 @@ function App() {
             className="form-control"
           />
         </div>
+
         <table className="table table-striped table-bordered table-hover table-responsive">
           <thead>
             <tr>
@@ -177,7 +203,6 @@ function App() {
               <th>Email</th>
               <th>Address</th>
               <th>Department</th>
-              <th>Designation</th>
               <th>Salary</th>
               <th>Actions</th>
             </tr>
@@ -191,7 +216,6 @@ function App() {
                 <td>{employee.email}</td>
                 <td>{employee.address}</td>
                 <td>{employee.department}</td>
-                <td>{employee.designation}</td>
                 <td>{employee.salary}</td>
                 <td>
                   <button
@@ -211,11 +235,9 @@ function App() {
             ))}
           </tbody>
         </table>
-
       </div>
     </>
   );
-
 }
 
 export default App;
